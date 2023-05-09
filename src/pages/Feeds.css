@@ -1,0 +1,13 @@
+.feed-stories-container {
+  margin-top: 14px;
+  overflow-x: scroll;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  /* for Internet Explorer, Edge */
+  scrollbar-width: none;
+  /* for Firefox */
+}
+.feed-stories-container::-webkit-scrollbar {
+  display: none;
+  /* for Chrome, Safari, and Opera */
+}

@@ -1,0 +1,9 @@
+.stories-container {
+  display: flex;
+  justify-content: flex;
+  align-items: center;
+  width: 1px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  gap: 18px;
+}

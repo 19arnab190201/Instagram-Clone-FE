@@ -1,11 +1,11 @@
 import React from "react";
 import Post from "./Post";
 import "./PostsContainer.css";
-const PostsContainer = () => {
+const PostsContainer = ({ posts, size }) => {
   return (
     <div className='post-main-container'>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((e, i) => (
-        <Post />
+      {posts?.map((data, i) => (
+        <Post key={data._id} size={size} postData={data} />
       ))}
     </div>
   );

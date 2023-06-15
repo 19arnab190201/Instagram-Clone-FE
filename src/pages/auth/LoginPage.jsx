@@ -27,8 +27,11 @@ const LoginPage = () => {
       })
       .then(function (response) {
         console.log("res", response.data);
-        dispatch({ type: "LOGIN", payload: response.data });
-        localStorage.setItem("instaCloneUser", JSON.stringify(response.data));
+        dispatch({ type: "LOGIN", payload: response.data.user });
+        localStorage.setItem(
+          "instaCloneUser",
+          JSON.stringify(response.data.user)
+        );
         navigate("/");
       })
       .catch(function (error) {

@@ -1,0 +1,127 @@
+.user-profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 85%;
+  /* border: 1px solid #000; */
+  margin: 0 auto;
+}
+.user-information {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+}
+.user-avatar {
+  width: 30%;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-details {
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.user-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+.user-name h2 {
+  font-size: 20px;
+  font-weight: 400;
+}
+.user-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+}
+.user-stats div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.user-stats div h3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 18px;
+}
+.user-bio {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 17vw;
+  max-height: 200px;
+}
+.user-bio h4 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+}
+.user-posts-container {
+  /* border: 1px solid #000; */
+  margin: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.ant-tabs-tab-active {
+  color: #000 !important;
+  font-weight: 600 !important;
+  transition: color 0.3s ease-in-out !important;
+}
+.ant-tabs-tab-btn {
+  color: #000 !important;
+  transition: color 0.3s ease-in-out !important;
+  letter-spacing: 1px;
+  font-size: 12px;
+}
+.ant-tabs-tab-btn[aria-selected="false"] {
+  color: rgb(115, 115, 115) !important;
+}
+.ant-tabs-ink-bar {
+  border: 1px solid #000000 !important;
+}
+.ant-tabs-content-holder {
+  width: 100% !important;
+  padding: 10px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.ant-tabs {
+  width: 100%;
+}
+.ant-tabs-nav-wrap {
+  justify-content: center;
+}
+
+.follow-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.follow-button:hover {
+  cursor: pointer;
+  background-color: #1877f2 !important;
+}

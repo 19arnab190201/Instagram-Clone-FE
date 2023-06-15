@@ -10,32 +10,24 @@ import ReelsIcon from "../assets/ReelsIcon.jsx";
 import MessagesIcon from "../assets/DMIcon.jsx";
 import NotificationsIcon from "../assets/NotificationIcon.jsx";
 import CreateIcon from "../assets/CreateIcon.jsx";
+import { AiFillPlusCircle } from "react-icons/ai";
 import ImageAndMedia from "../assets/ImageAndMedia.jsx";
+import defaultImage from "../assets/default.png";
+
+//Styles
+import "./HomePage.css";
+
 import axios from "axios";
 
-import { Layout, Menu, Button, Modal, Upload } from "antd";
+import { Layout, Menu, Button, Modal, Upload, Drawer, Input } from "antd";
 const { Header, Content, Footer, Sider } = Layout;
 
 const HomePage = () => {
   const { user } = useAuthContext();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-
-  const showModal = () => {
-    setOpen(true);
-  };
-  const handleOk = () => {
-    setModalText("The modal will be closed after two seconds");
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 2000);
-  };
-  const handleCancel = () => {
-    console.log("Clicked cancel button");
-    setOpen(false);
-  };
+  const [searchText, setSearchText] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const items = [
     {
@@ -72,7 +64,6 @@ const HomePage = () => {
       key: "7",
       icon: <CreateIcon />,
       label: "Create",
-      onClick: showModal,
     },
     {
       key: "8",
@@ -81,40 +72,69 @@ const HomePage = () => {
     },
   ];
 
-  const handleUpload = (file) => {
-    const formData = new FormData();
-    formData.append("postCaption", "Example post caption");
-    formData.append("media", file);
-
-    var requestOptions = {
-      method: "POST",
-      body: formData,
-      redirect: "follow",
-      credentials: "include", // Don't forget to specify this if you need cookies
-    };
-
-    // fetch(`${import.meta.env.VITE_API_URL}/api/v1/post/create`, requestOptions)
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log("Post created successfully:", data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error creating post:", error);
-    //   });
-
-    fetch("http://localhost:3000/api/v1/post/userposts", {
-      method: "get",
-      credentials: "include",
-    })
-      .then(async (res) => {
-        console.log("---**success**-----");
-        console.log(await res.text());
-      })
-      .catch((err) => {
-        console.log("---**error**-----");
-        console.log(err);
-      });
+  const handleNavigation = (key) => {
+    console.log(key);
+    if (key === "1") {
+      navigate("/");
+    } else if (key === "2") {
+      // navigate("/search");
+      showDrawer();
+    } else if (key === "3") {
+      navigate("/explore");
+    } else if (key === "4") {
+      navigate("/reels");
+    } else if (key === "5") {
+      navigate("/messages");
+    } else if (key === "6") {
+      navigate("/notifications");
+    } else if (key === "7") {
+      navigate("/create");
+    } else if (key === "8") {
+      console.log("user", `/profile/${user.userName}`);
+      navigate(`/profile/${user.userName}`);
+    }
   };
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const handleSearch = (value) => {
+    // Handle the search logic here
+    console.log(value);
+  };
+
+  const getSearchResults = async (value) => {
+    const source = axios.CancelToken.source();
+    try {
+      const searchResponse = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v1/search?q=${value}`,
+        { cancelToken: source.token }
+      );
+      console.log(searchResponse.data.users);
+      setSearchResults(searchResponse.data.users);
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        console.log("Request canceled by user");
+      } else {
+        console.log(error);
+      }
+    }
+  };
+
+  // Call this function to cancel the API request
+  const cancelRequest = () => {
+    source.cancel("Request canceled by user");
+  };
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      getSearchResults(searchText);
+    }
+  }, [searchText]);
 
   return (
     <div
@@ -122,45 +142,6 @@ const HomePage = () => {
         height: "100vh",
         display: "flex",
       }}>
-      <Modal
-        title='Create new post'
-        open={open}
-        centered
-        footer={null}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "50vh",
-            gap: "1rem",
-          }}>
-          <ImageAndMedia />
-          <p
-            style={{
-              fontSize: "20px",
-            }}>
-            Drag photos and videos here
-          </p>
-          <div>
-            <Upload
-              name='media'
-              action='/post/create'
-              accept='.png,.jpg,.jpeg'
-              showUploadList={false}
-              beforeUpload={(file) => {
-                handleUpload(file);
-                return false;
-              }}>
-              <Button type='primary'>Select From Computer</Button>
-            </Upload>
-          </div>
-        </div>
-      </Modal>
       <Sider
         style={{
           height: "100vh",
@@ -192,6 +173,7 @@ const HomePage = () => {
             height: "100%",
           }}
           defaultSelectedKeys={["1"]}
+          onClick={({ key }) => handleNavigation(key)}
           mode='inline'
           items={items}
         />
@@ -207,6 +189,72 @@ const HomePage = () => {
           }}
         />
       </Sider>
+      <div
+        style={{
+          position: "relative",
+        }}>
+        <Drawer
+          style={{
+            position: "absolute",
+          }}
+          title='Search'
+          placement='left'
+          closable={true}
+          onClose={onClose}
+          open={open}
+          getContainer={false}>
+          <div>
+            <Input
+              placeholder='Search'
+              value={searchText}
+              size='large'
+              suffix={
+                <AiFillPlusCircle
+                  size={18}
+                  color='#C8C8C8'
+                  style={{
+                    cursor: "pointer",
+                    transform: "rotate(46deg)",
+                  }}
+                  onClick={() => setSearchText("")}
+                />
+              }
+              style={{
+                width: "100%",
+                backgroundColor: "#EFEFEF",
+                border: "1px solid #EFEFEF",
+              }}
+              onChange={(e) => setSearchText(e.target.value)}
+              onPressEnter={() => handleSearch(searchText)}
+            />
+            <div className='search-results-container'>
+              {searchResults.map((user) => (
+                <div
+                  className='search-result'
+                  onClick={() => {
+                    navigate(`/profile/${user.userName}`);
+                    onClose();
+                  }}>
+                  <div className='search-result-image'>
+                    <img
+                      width={36}
+                      src={user.photo ? user.photo : defaultImage}
+                      alt='profile'
+                    />
+                  </div>
+                  <div className='search-result-details'>
+                    <div className='search-result-username'>
+                      {user.userName}
+                    </div>
+                    <div className='search-result-name'>{user.name}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Drawer>
+      </div>
+
       <div
         style={{
           margin: "2% 5% 0 5%",
